@@ -1,0 +1,7 @@
+import cv2
+import numpy as np
+
+img = cv2.imread('C:/PyProjects/VisionSystem/Templates/sample01.facebook.jpg',0)
+cv2.imshow('detected image',img)
+cv2.waitKey(0)
+cv2.destroyAllWindows()

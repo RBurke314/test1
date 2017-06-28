@@ -1,0 +1,77 @@
+print "Initialising..."
+import cv2,os
+import numpy as np
+from PIL import Image
+import time
+import sys
+from matplotlib import pyplot as plt
+
+img = cv2.imread('C:/PyProjects/VisionSystem/Vision9/detectedimg/sample04.wiki.jpg',0)
+cv2.imshow('detected image',img)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+yesChoice = ['yes','y']
+noChoice = ['no','n']
+path = './templates'
+
+
+detector= cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+cap = cv2.VideoCapture(0)
+
+def get_images_and_labels(path):
+    # Append all the absolute image paths in a list image_paths
+    # We will not read the image with the .sad extension in the training set
+    # Rather, we will use them to test our accuracy of the training
+    image_paths = [os.path.join(path, f) for f in os.listdir(path)]
+    # images will contains face images
+    images = []
+    # labels will contains the label that is assigned to the image
+    labels = []
+    for image_path in image_paths:
+        # Read the image and convert to grayscale
+        image_pil = Image.open(image_path).convert('L')
+        # Convert the image format into numpy array
+        image = np.array(image_pil, 'uint8')
+        # Get the label of the image
+        nbr = int(os.path.split(image_path)[1].split(".")[0].replace("sample", ""))
+        # Detect the face in the image
+        ##faces = faceCascade.detectMultiScale(image)
+        # If face is detected, append the face to images and the label to labels
+        ###for (x, y, w, h) in faces:
+            ##print '.',
+            ##images.append(image[y: y + h, x: x + w])
+            ##labels.append(nbr)
+            #cv2.imshow("Adding faces to traning set...", image[y: y + h, x: x + w])
+            #cv2.waitKey(50)
+    # return the images list and labels list
+    return images, labels
+
+
+
+
+
+while(True):
+    ret, img = cap.read()
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    #faces = detector.detectMultiScale(img, 1.3, 5)
+    #for (x,y,w,h) in faces:
+        #cv2.rectangle(img,(x,y),(x+w,y+h),(255,0,0),2)
+
+    cv2.imshow('frame',img)
+
+    # Append the images with the extension .sad into image_paths
+    print "Searching database"
+    image_paths = [os.path.join(path, f) for f in os.listdir(path) ] #if f.endswith('.sad')
+    #img = cv2.imread('C:/PyProjects/VisionSystem/Vision9/templates/sample01.facebook.jpg',0)
+    #template =img
+    template = cv2.imread('C:/PyProjects/VisionSystem/Vision9/templates/sample01.facebook.jpg',0)
+    template3 = Image.open('C:/PyProjects/VisionSystem/Vision9/templates/sample04.wiki.jpg')
+    templatenp = np.array(template3, 'uint8')
+    i = 0
+
+    
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+    
+cap.release()
+cv2.destroyAllWindows()
